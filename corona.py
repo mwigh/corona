@@ -3,9 +3,11 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import datetime
+from CoronaParser import corona_parser
+import pandas as pd
 
-italy_deaths = [41,52,79,107,148,197,233,366,463,631,827,1016,1266,1441,1809,2158,2503,2978,3405,4032,4825]
-last_meassurement_day = datetime.date(2020,3,21)
+italy_deaths = [41,52,79,107,148,197,233,366,463,631,827,1016,1266,1441,1809,2158,2503,2978,3405,4032,4825,5476, 6077, 6820]
+last_meassurement_day = datetime.date(2020,3,24)
 xdata = np.arange(len(italy_deaths))
 xdata_pred = np.arange(len(italy_deaths)-1,len(italy_deaths)+30)
 delay=-30
@@ -38,9 +40,8 @@ def fit_sigmoid_without_delay(xdata, ydata, delay):
     plt.show()
     return popt
 
-
-
-
+df = corona_parser()
+italy = df[df['Country,Other']=='Italy'].sort_values(by='date')
 fit_sigmoid_without_delay(xdata, italy_deaths, delay)
 popt = fit_sigmoid_and_delay(xdata, italy_deaths)
 
