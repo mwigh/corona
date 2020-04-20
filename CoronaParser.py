@@ -8,7 +8,7 @@ import os
 url = "https://www.worldometers.info/coronavirus/"
 filename_suff = 'data/df_hist'
 
-def corona_parser(save_file=True):
+def corona_parser(save_file=True,use_today=True):
     now = datetime.datetime.now().strftime("%Y-%-m-%d")
     filename = filename_suff + '_' + now + '.pkl'
     if os.path.isfile(filename):
@@ -33,8 +33,18 @@ def corona_parser(save_file=True):
     df_latest =  pd.read_html(str(table))[0]
     df_latest['date'] = now
     df_latest=df_latest.rename(columns = {'TotalCases':'confirmed', 'TotalRecovered':'recovered', 'TotalDeaths':'deaths', 'TotalRecovered':'recovered'})
-    
-    df_concat = pd.concat((df_hist, df_latest))
+    if use_today:
+        df_concat = pd.concat((df_hist, df_latest))
+    else:
+        df_concat=df_hist
     df_concat['date'] =  pd.to_datetime(df_concat['date'])
 
     return df_concat
+
+def resample_df(df):
+    return df
+
+def fix_duplicates(df):
+    for group in df.groupby:
+        df = resample_df(df)
+    return df
